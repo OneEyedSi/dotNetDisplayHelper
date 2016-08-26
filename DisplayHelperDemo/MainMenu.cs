@@ -12,8 +12,6 @@ namespace DisplayHelperDemo
 	[MenuClass("Main Menu")]
 	public class MainMenu
 	{
-		private static ConsoleDisplayHelper _objectViewer = new ConsoleDisplayHelper();
-
 		[MenuMethod("Display the properties of a simple object", DisplayOrder = 1)]
 		public static void DisplayASimpleObject()
 		{
