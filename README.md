@@ -1,18 +1,18 @@
 # DisplayHelper
 DisplayHelper is a small .NET library designed to simplify the display of objects and text.  Currently it can be used as-is with console applications and Windows Forms applications.  However, it is relatively straight-forward to extend the base DisplayHelper class for use in other applications.
 
-The DisplayHelper library targets .NET 2.0 to make it as broadly usable as possible.
+The DisplayHelper library targets **.NET 2.0** to make it as broadly usable as possible.
 
 ## Getting Started
 The repository contains a Visual Studio 2013 solution.  The solution contains three projects:
 
-1. DisplayHelper: The DisplayHelper library.  This is made up of a base DisplayHelper class plus derived classes for displaying text in Console applications, in Windows Forms TextBoxes, and in Windows Forms RichTextBoxes.
+1. **DisplayHelper**: The DisplayHelper library.  This is made up of a base DisplayHelper class plus derived classes for displaying text in Console applications, in Windows Forms TextBoxes, and in Windows Forms RichTextBoxes.
 
-2. DisplayHelperDemo: A console and Windows Forms application that demonstrates the functionality provided by the DisplayHelper library.
+2. **DisplayHelperDemo**: A console and Windows Forms application that demonstrates the functionality provided by the DisplayHelper library.
 
-3. MenuLibrary: A utility library used by DisplayHelperDemo to generate a console menu.  In this case the menu allows users to select the DisplayHelper functionality they wish to try out.
+3. **MenuLibrary**: A utility library used by DisplayHelperDemo to generate a console menu.  In this case the menu allows users to select the DisplayHelper functionality they wish to try out.
 
-The **MainMenu** in the **DisplayHelperDemo** project demonstrates how to use the ConsoleDisplayHelper class to display text in a Console application.  The **ObjectViewerForm** demonstrates how to use the TextBoxDisplayHelper class and RichTextBoxDisplayHelper class to display text in Windows Forms TextBoxes and RichTextBoxes, respectively.
+The **MainMenu** in the **DisplayHelperDemo** project demonstrates how to use the **ConsoleDisplayHelper** class to display text in a **Console application**.  The **ObjectViewerForm** demonstrates how to use the **TextBoxDisplayHelper** class and **RichTextBoxDisplayHelper** class to display text in **Windows Forms TextBoxes** and **RichTextBoxes**, respectively.
 
 ## Functionality Provided by DisplayHelper
 
