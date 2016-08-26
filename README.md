@@ -14,7 +14,7 @@ The repository contains a Visual Studio 2013 solution.  The solution contains th
 
 The **MainMenu** in the **DisplayHelperDemo** project demonstrates how to use the ConsoleDisplayHelper class to display text in a Console application.  The **ObjectViewerForm** demonstrates how to use the TextBoxDisplayHelper class and RichTextBoxDisplayHelper class to display text in Windows Forms TextBoxes and RichTextBoxes, respectively.
 
-## Functionality Provided DisplayHelper
+## Functionality Provided by DisplayHelper
 
 ### Displaying Objects
 The DisplayHelper uses reflection to display the values of an object's properties.  It will recurse down through the object graph, displaying the values of sub-properties (properties of objects that are properties of other objects), sub-sub-properties, etc.
