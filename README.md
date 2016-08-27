@@ -41,3 +41,8 @@ The DisplayHelper has several helper methods for displaying text.  These are mos
 * Display numbered text, of the form: `2) My text.`  The indent level of the text can be specified;
 
 * Display titles and sub-titles, where the text is underlined.  The only difference between a title and sub-title is the style of the underline.
+
+##Where can I get it?
+First, [install NuGet](http://docs.nuget.org/docs/start-here/installing-nuget) for Visual Studio. Then, in Visual Studio, open the solution to add the package to and use the Package Manager Console to install [DisplayHelper](https://www.nuget.org/packages/DisplayHelper/):
+
+    PM> Install-Package DisplayHelper
