@@ -1,4 +1,4 @@
-using MenuLibrary;
+using ConsoleMenu;
 
 namespace DisplayHelperDemo
 {

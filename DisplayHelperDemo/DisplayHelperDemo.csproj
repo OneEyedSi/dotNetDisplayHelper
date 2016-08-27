@@ -50,6 +50,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="ConsoleMenu, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\ConsoleMenu.2.0.0\lib\net20\ConsoleMenu.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
@@ -73,10 +77,6 @@
       <Project>{682beb9a-0cbc-48ad-b5e4-5ba9c472c1e4}</Project>
       <Name>DisplayHelper</Name>
     </ProjectReference>
-    <ProjectReference Include="..\MenuLibrary\MenuLibrary.csproj">
-      <Project>{2015F950-9CA7-4FDE-898D-EB4F102DC510}</Project>
-      <Name>MenuLibrary</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="ObjectViewerForm.resx">
@@ -95,6 +95,9 @@
       <ProductName>.NET Framework 3.5 SP1</ProductName>
       <Install>true</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

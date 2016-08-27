@@ -5,8 +5,6 @@ VisualStudioVersion = 12.0.40629.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DisplayHelperDemo", "DisplayHelperDemo\DisplayHelperDemo.csproj", "{5101FAC9-846C-4EAD-9989-600775817566}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MenuLibrary", "MenuLibrary\MenuLibrary.csproj", "{2015F950-9CA7-4FDE-898D-EB4F102DC510}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DisplayHelper", "DisplayHelper\DisplayHelper.csproj", "{682BEB9A-0CBC-48AD-B5E4-5BA9C472C1E4}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{FADC063D-EB4B-473E-AD46-FA7019358A63}"
@@ -25,10 +23,6 @@ Global
 		{5101FAC9-846C-4EAD-9989-600775817566}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5101FAC9-846C-4EAD-9989-600775817566}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5101FAC9-846C-4EAD-9989-600775817566}.Release|Any CPU.Build.0 = Release|Any CPU
-		{2015F950-9CA7-4FDE-898D-EB4F102DC510}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{2015F950-9CA7-4FDE-898D-EB4F102DC510}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{2015F950-9CA7-4FDE-898D-EB4F102DC510}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{2015F950-9CA7-4FDE-898D-EB4F102DC510}.Release|Any CPU.Build.0 = Release|Any CPU
 		{682BEB9A-0CBC-48AD-B5E4-5BA9C472C1E4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{682BEB9A-0CBC-48AD-B5E4-5BA9C472C1E4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{682BEB9A-0CBC-48AD-B5E4-5BA9C472C1E4}.Release|Any CPU.ActiveCfg = Release|Any CPU

@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using DisplayHelper;
-using MenuLibrary;
+using ConsoleMenu;
 
 namespace DisplayHelperDemo
 {
