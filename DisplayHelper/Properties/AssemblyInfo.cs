@@ -6,11 +6,11 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("DisplayHelper")]
-[assembly: AssemblyDescription("Methods to simplify the display of text, exceptions and object properties.")]
+[assembly: AssemblyDescription("Methods to simplify the display of objects and text, for Console and Windows Forms applications.")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Simon Elms")]
 [assembly: AssemblyProduct("DisplayHelper")]
-[assembly: AssemblyCopyright("Copyright © Simon Elms 2012, 2016")]
+[assembly: AssemblyCopyright("Copyright © 2012, 2016 Simon Elms")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
