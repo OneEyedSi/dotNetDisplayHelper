@@ -51,7 +51,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="ConsoleMenu, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\ConsoleMenu.2.0.0\lib\net20\ConsoleMenu.dll</HintPath>
+      <HintPath>..\packages\GoldConsoleMenu.2.0.0\lib\net20\ConsoleMenu.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
