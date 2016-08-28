@@ -1,9 +1,11 @@
 using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Drawing;
+using System.Text;
 using System.Windows.Forms;
 
-namespace DisplayHelper
+namespace Utilities.DisplayHelper
 {
 	/// <summary>
 	/// Helper methods for displaying text and details of objects via a Windows Forms RichTextBox 
@@ -38,9 +40,29 @@ namespace DisplayHelper
 		public static void ShowObject(RichTextBox textBox, object obj, int rootIndentLevel,
 			string title, params object[] titleArgs)
 		{
-			RichTextBoxDisplayHelper objectViewer = new RichTextBoxDisplayHelper(textBox);
-			objectViewer.DisplayObject(obj, rootIndentLevel, title, titleArgs);
-		}
+			RichTextBoxDisplayHelper viewer = new RichTextBoxDisplayHelper(textBox);
+			viewer.DisplayObject(obj, rootIndentLevel, title, titleArgs);
+        }
+
+        /// <summary>
+        /// Displays text formatted as XML.
+        /// </summary>
+        public static void ShowXmlText(RichTextBox textBox, string xmlText, int rootIndentLevel,
+            string title, params object[] titleArgs)
+        {
+            RichTextBoxDisplayHelper viewer = new RichTextBoxDisplayHelper(textBox);
+            viewer.DisplayXmlText(xmlText, rootIndentLevel, title, titleArgs);
+        }
+
+        /// <summary>
+        /// Displays text formatted as JSON.
+        /// </summary>
+        public static void ShowJsonText(RichTextBox textBox, string jsonText, int rootIndentLevel,
+            string title, params object[] titleArgs)
+        {
+            RichTextBoxDisplayHelper viewer = new RichTextBoxDisplayHelper(textBox);
+            viewer.DisplayJsonText(jsonText, rootIndentLevel, title, titleArgs);
+        }
 
 		/// <summary>
 		/// Displays the values in a data table in the specified rich text box.
@@ -48,8 +70,8 @@ namespace DisplayHelper
 		public static void ShowDataTable(RichTextBox textBox, DataTable dataTable,
 			bool displayRowState)
 		{
-			RichTextBoxDisplayHelper objectViewer = new RichTextBoxDisplayHelper(textBox);
-			objectViewer.DisplayDataTable(dataTable, displayRowState);
+			RichTextBoxDisplayHelper viewer = new RichTextBoxDisplayHelper(textBox);
+			viewer.DisplayDataTable(dataTable, displayRowState);
 		}
 
 		/// <summary>
@@ -57,8 +79,8 @@ namespace DisplayHelper
 		/// </summary>
 		public static void ShowException(RichTextBox textBox, int indentLevel, Exception exception)
 		{
-			RichTextBoxDisplayHelper objectViewer = new RichTextBoxDisplayHelper(textBox);
-			objectViewer.DisplayException(indentLevel, exception);
+			RichTextBoxDisplayHelper viewer = new RichTextBoxDisplayHelper(textBox);
+			viewer.DisplayException(indentLevel, exception);
 		}
 
 		/// <summary>
@@ -68,8 +90,8 @@ namespace DisplayHelper
 		public static void ShowAppendedText(RichTextBox textBox, string text, bool addLeadingSpace,
 			bool includeNewLine)
 		{
-			RichTextBoxDisplayHelper objectViewer = new RichTextBoxDisplayHelper(textBox);
-			objectViewer.DisplayAppendedText(text, addLeadingSpace, includeNewLine);
+			RichTextBoxDisplayHelper viewer = new RichTextBoxDisplayHelper(textBox);
+			viewer.DisplayAppendedText(text, addLeadingSpace, includeNewLine);
 		}
 
 		/// <summary>
@@ -79,8 +101,8 @@ namespace DisplayHelper
 		public static void ShowIndentedText(RichTextBox textBox, int indentLevel, string text,
 			bool wrapText, bool includeNewLine, params object[] args)
 		{
-			RichTextBoxDisplayHelper objectViewer = new RichTextBoxDisplayHelper(textBox);
-			objectViewer.DisplayIndentedText(indentLevel, text, wrapText, includeNewLine, args);
+			RichTextBoxDisplayHelper viewer = new RichTextBoxDisplayHelper(textBox);
+			viewer.DisplayIndentedText(indentLevel, text, wrapText, includeNewLine, args);
 		}
 
 		/// <summary>
@@ -91,8 +113,8 @@ namespace DisplayHelper
 		public static void ShowHeadedText(RichTextBox textBox, int indentLevel, string text,
 			bool wrapText, bool includeNewLine, params object[] args)
 		{
-			RichTextBoxDisplayHelper objectViewer = new RichTextBoxDisplayHelper(textBox);
-			objectViewer.DisplayHeadedText(indentLevel, text, wrapText, includeNewLine, args);
+			RichTextBoxDisplayHelper viewer = new RichTextBoxDisplayHelper(textBox);
+			viewer.DisplayHeadedText(indentLevel, text, wrapText, includeNewLine, args);
 		}
 
 		/// <summary>
@@ -102,8 +124,8 @@ namespace DisplayHelper
 		public static void ShowNumberedText(RichTextBox textBox, int number, int indentLevel,
 			string text, bool wrapText, params object[] args)
 		{
-			RichTextBoxDisplayHelper objectViewer = new RichTextBoxDisplayHelper(textBox);
-			objectViewer.DisplayNumberedText(number, indentLevel, text, wrapText, args);
+			RichTextBoxDisplayHelper viewer = new RichTextBoxDisplayHelper(textBox);
+			viewer.DisplayNumberedText(number, indentLevel, text, wrapText, args);
 		}
 
 		/// <summary>
@@ -111,8 +133,8 @@ namespace DisplayHelper
 		/// </summary>
 		public static void ShowTitle(RichTextBox textBox, string titleText)
 		{
-			RichTextBoxDisplayHelper objectViewer = new RichTextBoxDisplayHelper(textBox);
-			objectViewer.DisplayTitle(titleText);
+			RichTextBoxDisplayHelper viewer = new RichTextBoxDisplayHelper(textBox);
+			viewer.DisplayTitle(titleText);
 		}
 
 		/// <summary>
@@ -120,8 +142,8 @@ namespace DisplayHelper
 		/// </summary>
 		public static void ShowSubTitle(RichTextBox textBox, string titleText)
 		{
-			RichTextBoxDisplayHelper objectViewer = new RichTextBoxDisplayHelper(textBox);
-			objectViewer.DisplaySubTitle(titleText);
+			RichTextBoxDisplayHelper viewer = new RichTextBoxDisplayHelper(textBox);
+			viewer.DisplaySubTitle(titleText);
 		}
 
 		#endregion

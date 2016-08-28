@@ -40,6 +40,9 @@
   <ItemGroup>
     <Compile Include="ConsoleDisplayHelper.cs" />
     <Compile Include="DisplayHelper.cs" />
+    <Compile Include="JsonFormatter\IndentWriter.cs" />
+    <Compile Include="JsonFormatter\JsonFormatter.cs" />
+    <Compile Include="JsonFormatter\StringWalker.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RichTextBoxDisplayHelper.cs" />
     <Compile Include="TextBoxDisplayHelper.cs" />
@@ -47,6 +50,7 @@
   <ItemGroup>
     <None Include="DisplayHelper.nuspec" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -1,8 +1,10 @@
 using System;
+using System.Collections.Generic;
 using System.Data;
+using System.Text;
 using System.Windows.Forms;
 
-namespace DisplayHelper
+namespace Utilities.DisplayHelper
 {
 	/// <summary>
 	/// Helper methods for displaying text and details of objects via a Windows Forms TextBox 
@@ -73,7 +75,27 @@ namespace DisplayHelper
 		{
 			TextBoxDisplayHelper objectViewer = new TextBoxDisplayHelper(textBox);
 			objectViewer.DisplayObject(obj, rootIndentLevel, title, titleArgs);
-		}
+        }
+
+        /// <summary>
+        /// Displays text formatted as XML.
+        /// </summary>
+        public static void ShowXmlText(TextBoxBase textBox, string xmlText, int rootIndentLevel,
+            string title, params object[] titleArgs)
+        {
+            TextBoxDisplayHelper viewer = new TextBoxDisplayHelper(textBox);
+            viewer.DisplayXmlText(xmlText, rootIndentLevel, title, titleArgs);
+        }
+
+        /// <summary>
+        /// Displays text formatted as JSON.
+        /// </summary>
+        public static void ShowJsonText(TextBoxBase textBox, string jsonText, int rootIndentLevel,
+            string title, params object[] titleArgs)
+        {
+            TextBoxDisplayHelper viewer = new TextBoxDisplayHelper(textBox);
+            viewer.DisplayJsonText(jsonText, rootIndentLevel, title, titleArgs);
+        }
 
 		/// <summary>
 		/// Displays the values in a data table in the specified text box.

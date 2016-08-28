@@ -1,8 +1,9 @@
 using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Text;
 
-namespace DisplayHelper
+namespace Utilities.DisplayHelper
 {
 	/// <summary>
 	/// Helper methods for displaying text and details of objects via the console.
@@ -31,17 +32,37 @@ namespace DisplayHelper
 		public static void ShowObject(object obj, int rootIndentLevel,
 			string title, params object[] titleArgs)
 		{
-			ConsoleDisplayHelper objectViewer = new ConsoleDisplayHelper();
-			objectViewer.DisplayObject(obj, rootIndentLevel, title, titleArgs);
+            ConsoleDisplayHelper viewer = new ConsoleDisplayHelper();
+            viewer.DisplayObject(obj, rootIndentLevel, title, titleArgs);
 		}
+
+        /// <summary>
+        /// Displays text formatted as XML.
+        /// </summary>
+        public static void ShowXmlText(string xmlText, int rootIndentLevel,
+            string title, params object[] titleArgs)
+        {
+            ConsoleDisplayHelper viewer = new ConsoleDisplayHelper();
+            viewer.DisplayXmlText(xmlText, rootIndentLevel, title, titleArgs);
+        }
+
+        /// <summary>
+        /// Displays text formatted as JSON.
+        /// </summary>
+        public static void ShowJsonText(string jsonText, int rootIndentLevel,
+            string title, params object[] titleArgs)
+        {
+            ConsoleDisplayHelper viewer = new ConsoleDisplayHelper();
+            viewer.DisplayJsonText(jsonText, rootIndentLevel, title, titleArgs);
+        }
 
 		/// <summary>
 		/// Displays the values in a data table.
 		/// </summary>
 		public static void ShowDataTable(DataTable dataTable, bool displayRowState)
 		{
-			ConsoleDisplayHelper objectViewer = new ConsoleDisplayHelper();
-			objectViewer.DisplayDataTable(dataTable, displayRowState);
+            ConsoleDisplayHelper viewer = new ConsoleDisplayHelper();
+            viewer.DisplayDataTable(dataTable, displayRowState);
 		}
 
 		/// <summary>
@@ -49,8 +70,8 @@ namespace DisplayHelper
 		/// </summary>
 		public static void ShowException(int indentLevel, Exception exception)
 		{
-			ConsoleDisplayHelper objectViewer = new ConsoleDisplayHelper();
-			objectViewer.DisplayException(indentLevel, exception);
+            ConsoleDisplayHelper viewer = new ConsoleDisplayHelper();
+            viewer.DisplayException(indentLevel, exception);
 		}
 		
 		/// <summary>
@@ -60,8 +81,8 @@ namespace DisplayHelper
 		public static void ShowAppendedText(string text, bool addLeadingSpace,
 			bool includeNewLine)
 		{
-			ConsoleDisplayHelper objectViewer = new ConsoleDisplayHelper();
-			objectViewer.DisplayAppendedText(text, addLeadingSpace, includeNewLine);
+            ConsoleDisplayHelper viewer = new ConsoleDisplayHelper();
+            viewer.DisplayAppendedText(text, addLeadingSpace, includeNewLine);
 		}
 
 		/// <summary>
@@ -71,8 +92,8 @@ namespace DisplayHelper
 		public static void ShowIndentedText(int indentLevel, string text, bool wrapText,
 			bool includeNewLine, params object[] args)
 		{
-			ConsoleDisplayHelper objectViewer = new ConsoleDisplayHelper();
-			objectViewer.DisplayIndentedText(indentLevel, text, wrapText, includeNewLine, args);
+            ConsoleDisplayHelper viewer = new ConsoleDisplayHelper();
+            viewer.DisplayIndentedText(indentLevel, text, wrapText, includeNewLine, args);
 		}
 
 		/// <summary>
@@ -83,8 +104,8 @@ namespace DisplayHelper
 		public static void ShowHeadedText(int indentLevel, string text, bool wrapText,
 			bool includeNewLine, params object[] args)
 		{
-			ConsoleDisplayHelper objectViewer = new ConsoleDisplayHelper();
-			objectViewer.DisplayHeadedText(indentLevel, text, wrapText, includeNewLine, args);
+            ConsoleDisplayHelper viewer = new ConsoleDisplayHelper();
+            viewer.DisplayHeadedText(indentLevel, text, wrapText, includeNewLine, args);
 		}
 
 		/// <summary>
@@ -94,8 +115,8 @@ namespace DisplayHelper
 		public static void ShowNumberedText(int number, int indentLevel, string text,
 			bool wrapText, params object[] args)
 		{
-			ConsoleDisplayHelper objectViewer = new ConsoleDisplayHelper();
-			objectViewer.DisplayNumberedText(number, indentLevel, text, wrapText, args);
+            ConsoleDisplayHelper viewer = new ConsoleDisplayHelper();
+            viewer.DisplayNumberedText(number, indentLevel, text, wrapText, args);
 		}
 
 		/// <summary>
@@ -103,8 +124,8 @@ namespace DisplayHelper
 		/// </summary>
 		public static void ShowTitle(string titleText)
 		{
-			ConsoleDisplayHelper objectViewer = new ConsoleDisplayHelper();
-			objectViewer.DisplayTitle(titleText);
+            ConsoleDisplayHelper viewer = new ConsoleDisplayHelper();
+            viewer.DisplayTitle(titleText);
 		}
 		
 		/// <summary>
@@ -112,8 +133,8 @@ namespace DisplayHelper
 		/// </summary>
 		public static void ShowSubTitle(string titleText)
 		{
-			ConsoleDisplayHelper objectViewer = new ConsoleDisplayHelper();
-			objectViewer.DisplaySubTitle(titleText);
+            ConsoleDisplayHelper viewer = new ConsoleDisplayHelper();
+            viewer.DisplaySubTitle(titleText);
 		}
 
 		#endregion
@@ -200,23 +221,27 @@ namespace DisplayHelper
 			string origText = text;
 			StringBuilder resultantText = new StringBuilder();
 			int charPosition = 0;
+			int lineCutOffColumn = numberCharsPerLine;
+			string wrappedIndent = "";
 			while (origText.Length > 0)
 			{
-				if (origText.Length < numberCharsPerLine)
+				if (origText.Length < lineCutOffColumn)
 				{
-					resultantText.AppendLine(origText);
+					resultantText.AppendLine(wrappedIndent + origText);
 					origText = string.Empty;
 				}
 				else
 				{
-					charPosition = origText.Substring(0, numberCharsPerLine).LastIndexOf(' ') + 1;
+					charPosition = origText.Substring(0, lineCutOffColumn).LastIndexOf(' ') + 1;
 					if (charPosition == 0)
 					{
-						charPosition = numberCharsPerLine;
+						charPosition = lineCutOffColumn;
 					}
 
-					resultantText.AppendLine(origText.Substring(0, charPosition));
-					origText = indent + origText.Substring(charPosition);
+					resultantText.AppendLine(wrappedIndent + origText.Substring(0, charPosition));
+					origText = origText.Substring(charPosition);
+					lineCutOffColumn = numberCharsPerLine - indentWidth;
+					wrappedIndent = indent;
 				}
 			}
 			wrappedText = resultantText.ToString();

@@ -2,10 +2,12 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Data;
+using System.IO;
 using System.Reflection;
 using System.Text;
+using System.Xml;
 
-namespace DisplayHelper
+namespace Utilities.DisplayHelper
 {
 	/// <summary>
 	/// Helper methods for displaying text and details of objects.
@@ -237,7 +239,103 @@ namespace DisplayHelper
 			DisplayHelper.ObjectArguments objectArguments =
 				new DisplayHelper.ObjectArguments(obj, rootIndentLevel, title, titleArgs);
 			this.DisplaySingleObject(objectArguments);
-		}
+        }
+
+        /// <summary>
+        /// Displays text formatted as XML.
+        /// </summary>
+        /// <remarks>This would be trivial in .NET 3.5 or later, where we could use 
+        /// System.Xml.Linq.XDocument.Parse(xmlText).ToString().  If we're sticking to .NET 2.0 
+        /// then it's messier.</remarks>
+        protected void DisplayXmlText(string xmlText, int rootIndentLevel,
+            string title, params object[] titleArgs)
+        {
+            int indentLevel = rootIndentLevel;
+            bool wrapText = true;
+            bool includeNewLine = true;
+
+            if (title != null && title.Trim().Length > 0)
+            {
+                this.DisplayHeadedText(indentLevel, title, wrapText, includeNewLine,
+                    titleArgs);
+                indentLevel++;
+            }
+
+            XmlDocument xmlDoc = new XmlDocument();
+            xmlDoc.LoadXml(xmlText);
+            StringBuilder sb = new StringBuilder();
+            XmlWriterSettings settings = new XmlWriterSettings();
+            settings.Indent = true;
+
+            try
+            {
+                using (XmlWriter writer = XmlWriter.Create(sb, settings))
+                {
+                    xmlDoc.Save(writer);
+                }
+
+                // Can't handle text wrapping if just writing the whole string builder string 
+                //  out in one go.  So write each line separately.  Much slower but this is likely 
+                //  to only be used in development, not production code.
+                using (StringReader reader = new StringReader(sb.ToString()))
+                {
+                    string line;
+                    while ((line = reader.ReadLine()) != null)
+                    {
+                        this.DisplayIndentedText(indentLevel, line, wrapText, includeNewLine);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                this.DisplayIndentedText(indentLevel,
+                    "Exception occurred while trying to display XML text:", wrapText,
+                    includeNewLine);
+                this.DisplayException(indentLevel + 1, ex);
+
+                // Since the problem occurred while trying to display the XML string as formatted 
+                //  text display the unformatted text so the user has some output.
+                this.DisplayIndentedText(indentLevel, xmlText, wrapText, includeNewLine);
+            }
+        }
+
+        /// <summary>
+        /// Displays text formatted as JSON.
+        /// </summary>
+        protected void DisplayJsonText(string jsonText, int rootIndentLevel,
+            string title, params object[] titleArgs)
+        {
+            int indentLevel = rootIndentLevel;
+            bool wrapText = true;
+            bool includeNewLine = true;
+
+            if (title != null && title.Trim().Length > 0)
+            {
+                this.DisplayHeadedText(indentLevel, title, wrapText, includeNewLine,
+                    titleArgs);
+                indentLevel++;
+            }
+
+            try
+            {
+                string formattedIndentedText = new JsonFormatter.JsonFormatter(jsonText).Format();
+                // Line breaks already added, don't add more.
+                wrapText = false;
+                this.DisplayIndentedText(0, formattedIndentedText, wrapText, includeNewLine);
+            }
+            catch (Exception ex)
+            {
+                wrapText = true;
+                this.DisplayIndentedText(indentLevel,
+                    "Exception occurred while trying to display JSON text:", wrapText,
+                    includeNewLine);
+                this.DisplayException(indentLevel + 1, ex);
+
+                // Since the problem occurred while trying to display the JSON string as formatted 
+                //  text display the unformatted text so the user has some output.
+                this.DisplayIndentedText(indentLevel, jsonText, wrapText, includeNewLine);
+            }
+        }
 
 		/// <summary>
 		/// Displays the values in a data table.
