@@ -5,7 +5,7 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("DisplayHelper")]
+[assembly: AssemblyTitle("Display Helper")]
 [assembly: AssemblyDescription("Methods to simplify the display of objects and text, for Console and Windows Forms applications.")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Simon Elms")]
