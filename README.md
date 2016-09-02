@@ -29,6 +29,9 @@ The DisplayHelper will display the type of an exception and the exception messag
 ### Displaying Data Tables
 The DisplayHelper will display the values in every cell of every row of a specified data table.  It can handle empty data tables and data tables that are set to null.
 
+### Displaying XML and JSON Text
+The DisplayHelper will add line breaks and indents when displaying XML and JSON text to make them more readable.
+
 ### Displaying Text
 The DisplayHelper has several helper methods for displaying text.  These are most useful in Console applications, although they can be used in Windows Forms applications as well:
 

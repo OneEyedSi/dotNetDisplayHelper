@@ -167,7 +167,35 @@ namespace DisplayHelperDemo
 			}
 		}
 
-		[MenuMethod("Display Title", DisplayOrder = 10)]
+        [MenuMethod("Display formatted JSON text", DisplayOrder = 10)]
+        public static void DisplayJson()
+        {
+            try
+            {
+                string jsonText = "{\"firstName\": \"John\",\"lastName\": \"Smith\",\"age\": 25,\"address\": {\"streetAddress\": \"21 2nd Street\",\"city\": \"New York\",\"state\": \"NY\",\"postalCode\": 10021},\"phoneNumbers\": [{\"type\": \"home\",\"number\": \"212 555-1234\"},{\"type\": \"fax\",\"number\": \"646 555-4567\"}]}";
+                ConsoleDisplayHelper.ShowJsonText(jsonText, 1, "Results:");
+            }
+            catch (Exception xcp)
+            {
+                ConsoleDisplayHelper.ShowException(1, xcp);
+            }
+        }
+
+        [MenuMethod("Display formatted XML text", DisplayOrder = 11)]
+        public static void DisplayXml()
+        {
+            try
+            {
+                string xmlText = "<truckContents><truck><key>235</key><shortName>Turners</shortName><longName>A &amp; P Turners Ltd</longName></truck><orderSummary><totalItems>47</totalItems><totalWeight>322</totalWeight><totalVolume>6.5090</totalVolume></orderSummary><orders><order id=\"287451\" items=\"20\" weight=\"100\" volume=\"2.5\" /><order id=\"287498\" items=\"10\" weight=\"52\" volume=\"1.090\" /><order id=\"289562\" items=\"17\" weight=\"170\" volume=\"4.0\" /></orders></truckContents>";
+                ConsoleDisplayHelper.ShowXmlText(xmlText, 1, "Results:");
+            }
+            catch (Exception xcp)
+            {
+                ConsoleDisplayHelper.ShowException(1, xcp);
+            }
+        }
+
+		[MenuMethod("Display Title", DisplayOrder = 12)]
 		public static void DisplayTitle()
 		{
 			try
@@ -184,7 +212,7 @@ namespace DisplayHelperDemo
 			}
 		}
 
-		[MenuMethod("Display Sub-title", DisplayOrder = 11)]
+		[MenuMethod("Display Sub-title", DisplayOrder = 13)]
 		public static void DisplaySubTitle()
 		{
 			try
@@ -201,7 +229,7 @@ namespace DisplayHelperDemo
 			}
 		}
 
-		[MenuMethod("Display Numbered Text", DisplayOrder = 12)]
+		[MenuMethod("Display Numbered Text", DisplayOrder = 14)]
 		public static void DisplayNumberedText()
 		{
 			try
@@ -216,7 +244,7 @@ namespace DisplayHelperDemo
 			}
 		}
 
-		[MenuMethod("Display Indented Text", DisplayOrder = 13)]
+		[MenuMethod("Display Indented Text", DisplayOrder = 15)]
 		public static void DisplayIndentedText()
 		{
 			try
@@ -231,7 +259,7 @@ namespace DisplayHelperDemo
 			}
 		}
 
-		[MenuMethod("Display Headed Text", DisplayOrder = 14)]
+		[MenuMethod("Display Headed Text", DisplayOrder = 16)]
 		public static void DisplayHeadedText()
 		{
 			try
