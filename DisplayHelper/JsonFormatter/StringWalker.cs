@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace Utilities.DisplayHelper.JsonFormatter
+﻿namespace DisplayHelper.JsonFormatter
 {
 	/// <summary>
 	/// For stepping through a string, one character at a time.

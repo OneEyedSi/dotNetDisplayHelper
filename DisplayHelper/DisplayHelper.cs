@@ -7,7 +7,7 @@ using System.Reflection;
 using System.Text;
 using System.Xml;
 
-namespace Utilities.DisplayHelper
+namespace DisplayHelper
 {
 	/// <summary>
 	/// Helper methods for displaying text and details of objects.

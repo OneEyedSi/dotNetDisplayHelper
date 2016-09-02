@@ -1,11 +1,9 @@
 using System;
-using System.Collections.Generic;
 using System.Data;
 using System.Drawing;
-using System.Text;
 using System.Windows.Forms;
 
-namespace Utilities.DisplayHelper
+namespace DisplayHelper
 {
 	/// <summary>
 	/// Helper methods for displaying text and details of objects via a Windows Forms RichTextBox 

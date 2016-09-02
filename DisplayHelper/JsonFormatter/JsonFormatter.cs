@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Text;
 
-namespace Utilities.DisplayHelper.JsonFormatter
+namespace DisplayHelper.JsonFormatter
 {
 	/// <summary>
 	/// Formats a JSON string with each element on a different line and indented as appropriate to 

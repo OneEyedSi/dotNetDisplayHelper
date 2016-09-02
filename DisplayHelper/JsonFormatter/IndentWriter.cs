@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Text;
 
-namespace Utilities.DisplayHelper.JsonFormatter
+namespace DisplayHelper.JsonFormatter
 {
 	/// <summary>
 	/// For building a multi-line string, with each line indented by an arbitrary amount.

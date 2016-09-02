@@ -1,9 +1,8 @@
 using System;
-using System.Collections.Generic;
 using System.Data;
 using System.Text;
 
-namespace Utilities.DisplayHelper
+namespace DisplayHelper
 {
 	/// <summary>
 	/// Helper methods for displaying text and details of objects via the console.
