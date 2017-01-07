@@ -284,6 +284,13 @@ namespace DisplayHelperDemo
 		{
 			get { return new RecursiveObject2(_integerProperty); }
 		}
+
+	    public static RecursiveObject NewObject
+	    {
+            get { return new RecursiveObject(-1); }
+	    }
+
+        public static RecursiveObject NewObjectField = new RecursiveObject(-2);
 	}
 
 	public class RecursiveObject2
