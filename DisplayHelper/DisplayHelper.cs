@@ -474,17 +474,23 @@ namespace DisplayHelper
 			PropertyInfo[] properties = obj.GetType().GetProperties();
 			foreach (PropertyInfo property in properties)
 			{
-				memberDetails.Add(new MemberDetails(property.Name, property.MemberType,
-					property.PropertyType, property.GetValue(obj, null),
-					new Dictionary<Type, int>(recursionTypeCount)));
+                if (!property.GetGetMethod().IsStatic)
+                {
+                    memberDetails.Add(new MemberDetails(property.Name, property.MemberType,
+                        property.PropertyType, property.GetValue(obj, null),
+                        new Dictionary<Type, int>(recursionTypeCount)));
+                }
 			}
 
 			FieldInfo[] fields = obj.GetType().GetFields();
 			foreach (FieldInfo field in fields)
 			{
-				memberDetails.Add(new MemberDetails(field.Name, field.MemberType,
-					field.FieldType, field.GetValue(obj),
-					new Dictionary<Type, int>(recursionTypeCount)));
+                if (!field.IsStatic)
+			    {
+			        memberDetails.Add(new MemberDetails(field.Name, field.MemberType,
+			            field.FieldType, field.GetValue(obj),
+			            new Dictionary<Type, int>(recursionTypeCount)));
+			    }
 			}
 
 			for (int i = 0; i < memberDetails.Count; i++)
