@@ -269,6 +269,8 @@ namespace DisplayHelperDemo
 			_integerProperty = integerProperty;
 		}
 
+        public static RecursiveObject StaticRecursiveField = new RecursiveObject(-1);
+
 		private int _integerProperty;
 		public int IntegerProperty
 		{
@@ -279,18 +281,16 @@ namespace DisplayHelperDemo
 		{
 			get { return new RecursiveObject(_integerProperty + 1); }
 		}
-
+        
 		public RecursiveObject2 ObjectProperty
 		{
 			get { return new RecursiveObject2(_integerProperty); }
 		}
 
-	    public static RecursiveObject NewObject
+	    public static RecursiveObject StaticRecursiveProperty
 	    {
-            get { return new RecursiveObject(-1); }
+            get { return new RecursiveObject(-2); }
 	    }
-
-        public static RecursiveObject NewObjectField = new RecursiveObject(-2);
 	}
 
 	public class RecursiveObject2
