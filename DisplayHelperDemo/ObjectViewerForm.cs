@@ -194,5 +194,12 @@ namespace DisplayHelperDemo
 		}
 
 		#endregion
+
+        private void mainPanel_Layout(object sender, LayoutEventArgs e)
+        {
+            int halfWidth = mainPanel.Width / 2;
+            leftPanel.Width = halfWidth;
+            rightPanel.Width = halfWidth;
+        }
 	}
 }
