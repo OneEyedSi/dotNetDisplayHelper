@@ -245,7 +245,15 @@ namespace DisplayHelper
 			string indentedText = new string(' ', indentWidth) + text;
 
 			int startOfTextPosition = this.TextBox.TextLength + indentWidth;
-			int highlightedTextLength = text.IndexOf(" (type:");
+            int highlightedTextLength = text.IndexOf(" (type:");
+            if (highlightedTextLength == -1)
+            {
+                highlightedTextLength = text.IndexOf(" (field):");
+            }
+            if (highlightedTextLength == -1)
+            {
+                highlightedTextLength = text.IndexOf(" (field, type:");
+            }
 			if (highlightedTextLength == -1)
 			{
 				highlightedTextLength = text.IndexOf(':');
