@@ -76,17 +76,32 @@ namespace DisplayHelperDemo
 			}
 		}
 
-		[MenuMethod("Display the properties of each object in a list of values", DisplayOrder = 5)]
-		public static void DisplayValueEnumeration()
+        [MenuMethod("Display the properties of each object in a list of values", DisplayOrder = 5)]
+        public static void DisplayValueEnumeration()
+        {
+            try
+            {
+                List<int> valueList = new List<int>();
+                valueList.Add(10);
+                valueList.Add(20);
+                ConsoleDisplayHelper.ShowObject(valueList, 0, "{0} to display:",
+                    valueList.GetType());
+                DisplayObjectViaForm(valueList);
+            }
+            catch (Exception xcp)
+            {
+                ConsoleDisplayHelper.ShowException(1, xcp);
+            }
+        }
+
+		[MenuMethod("Display the properties of each object in a list of strings", DisplayOrder = 5)]
+		public static void DisplayStringEnumeration()
 		{
 			try
 			{
-				List<int> valueList = new List<int>();
-				valueList.Add(10);
-				valueList.Add(20);
-				ConsoleDisplayHelper.ShowObject(valueList, 0, "{0} to display:", 
-					valueList.GetType());
-				DisplayObjectViaForm(valueList);
+				List<string> stringList = new List<string>(new string[] {"AA", "BB"});
+                ConsoleDisplayHelper.ShowObject(stringList, 0, "String list to display:");
+                DisplayObjectViaForm(stringList);
 			}
 			catch (Exception xcp)
 			{

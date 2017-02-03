@@ -217,7 +217,7 @@ namespace DisplayHelper
 			foreach (object obj in enumerableObjects)
 			{
 				string itemTitle = string.Format("{0}[{1}]:", obj.GetType().Name, i);
-				if (obj.GetType().IsValueType)
+				if (obj.GetType().IsValueType || obj is string)
 				{
 					this.DisplayHeadedText(indentLevel, itemTitle + " " + obj.ToString(),
 						false, true);
