@@ -27,23 +27,31 @@ namespace DisplayHelper
 			public object[] TitleArgs;
 			public string ObjectName;
 			public Dictionary<Type, int> RecursionTypeCount;
+            public Dictionary<Type, List<object>> ReferenceTypeObjectRegister;
+            public bool SimpleDataTypesOnly;
 
 			public ObjectArguments(object obj, int rootIndentLevel,
-				string title, params object[] titleArgs)
-				: this(obj, rootIndentLevel, title, null, new Dictionary<Type, int>(), titleArgs)
+                Dictionary<Type, List<object>> referenceTypeObjectRegister,
+                string title, params object[] titleArgs)
+				: this(obj, rootIndentLevel, null, new Dictionary<Type, int>(), false,
+                      referenceTypeObjectRegister, 
+                      title, titleArgs)
 			{ }
 
-			public ObjectArguments(object obj, int rootIndentLevel,
-				string title, string objectName, Dictionary<Type, int> recursionTypeCount,
-				params object[] titleArgs)
+			public ObjectArguments(object obj, int rootIndentLevel, string objectName, 
+                Dictionary<Type, int> recursionTypeCount, bool simpleTypesOnly,
+                Dictionary<Type, List<object>> referenceTypeObjectRegister, 
+                string title, params object[] titleArgs)
 			{
 				Object = obj;
 				RootIndentLevel = rootIndentLevel;
-				Title = title;
-				TitleArgs = titleArgs;
 				ObjectName = objectName;
 				RecursionTypeCount = recursionTypeCount;
-			}
+                SimpleDataTypesOnly = simpleTypesOnly;
+                ReferenceTypeObjectRegister = referenceTypeObjectRegister;
+                Title = title;
+                TitleArgs = titleArgs;
+            }
 		}
 
 		/// <summary>
@@ -75,26 +83,43 @@ namespace DisplayHelper
 		private const string _nullDisplayText = "[NULL]";
 		private const string _emptyEnumerableDisplayText = "[NO ITEMS]";
 		private const string _maxRecursionDepthText = "[MAX RECURSION DEPTH REACHED]";
-		private const int _maxRecursionDepth = 5;
+        private const string _simpleTypesOnlyText = "[DISPLAY OF COMPLEX TYPES DISABLED]";
+        private const string _referenceObjectAlreadyDisplayedText = "[CIRCULAR REFERENCE - OBJECT PREVIOUSLY DISPLAYED]";
+        private const int _maxRecursionDepth = 5;
 		private const int _tabWidth = 4;
 
-		#endregion
+        #endregion
 
-		#region Constructors, Destructors / Finalizers and Dispose Methods ************************
+        #region Constructors, Destructors / Finalizers and Dispose Methods ************************
 
-		#endregion
+        #endregion
 
-		#region Properties ************************************************************************
+        #region Properties ************************************************************************
 
-		#endregion
+        private Dictionary<Type, List<object>> _referenceTypeObjectRegister;
 
-		#region Public Methods ********************************************************************
+        public Dictionary<Type, List<object>> ReferenceTypeObjectRegister
+        {
+            get 
+            {
+                if (_referenceTypeObjectRegister == null)
+                {
+                    _referenceTypeObjectRegister = new Dictionary<Type, List<object>>();
+                }
+                return _referenceTypeObjectRegister; 
+            }
+        }
 
-		/// <summary>
-		/// Appends the specified text to the last line of text.
-		/// </summary>
-		/// <param name="text"></param>
-		public abstract void DisplayAppendedText(string text, bool addLeadingSpace,
+
+        #endregion
+
+        #region Public Methods ********************************************************************
+
+        /// <summary>
+        /// Appends the specified text to the last line of text.
+        /// </summary>
+        /// <param name="text"></param>
+        public abstract void DisplayAppendedText(string text, bool addLeadingSpace,
 			bool includeNewLine);
 
 		/// <summary>
@@ -156,29 +181,50 @@ namespace DisplayHelper
 				wrapText, includeNewLine);
 		}
 
-		#endregion
+        #endregion
 
-		#region Protected Methods *****************************************************************
+        #region Protected Methods *****************************************************************
 
-		/// <summary>
-		/// Displays the details of an object - either a single object or an enumeration of objects.
-		/// </summary>
-		protected virtual void DisplayObject(object obj, int rootIndentLevel,
-			string title, params object[] titleArgs)
+        /// <summary>
+        /// Displays the details of an object - either a single object or an enumeration of 
+        /// objects.
+        /// </summary>
+        /// <param name="simpleDataTypesOnly">If set then only displays the values of 
+        /// properties or fields which are value types or strings.  If cleared then displays the 
+        /// details of all properties and fields of the object.
+        /// </param>
+        /// <remarks>If simpleDataTypesOnly is set then properties and fields which are reference 
+        /// types will still be listed.  However, their members will not be displayed.</remarks>
+        protected virtual void DisplayObject(object obj, int rootIndentLevel,
+            bool simpleDataTypesOnly,
+            string title, params object[] titleArgs)
 		{
-			if (!(obj is string) && obj is IEnumerable)
+            Dictionary<Type, List<object>> referenceTypeObjectRegister = 
+                new Dictionary<Type, List<object>>();
+
+            if (!(obj is string) && obj is IEnumerable)
 			{
-				this.DisplayEnumerableObjects((IEnumerable)obj, rootIndentLevel, title, titleArgs);
+				this.DisplayEnumerableObjects((IEnumerable)obj, rootIndentLevel, simpleDataTypesOnly,
+                    referenceTypeObjectRegister, title, titleArgs);
 				return;
 			}
-			this.DisplaySingleObject(obj, rootIndentLevel, title, titleArgs);
+			this.DisplaySingleObject(obj, rootIndentLevel, simpleDataTypesOnly,
+                referenceTypeObjectRegister, title, titleArgs);
 		}
 
-		/// <summary>
-		/// Displays the details of each value or object in an Enumerable collection.
-		/// </summary>
-		protected virtual void DisplayEnumerableObjects(IEnumerable enumerableObjects,
-			int rootIndentLevel, string title, params object[] titleArgs)
+        /// <summary>
+        /// Displays the details of each value or object in an Enumerable collection.
+        /// </summary>
+        /// <param name="simpleDataTypesOnly">If set then only displays the values of 
+        /// properties or fields which are value types or strings.  If cleared then displays the 
+        /// details of all properties and fields of an object in the enumeration.
+        /// </param>
+        /// <remarks>If simpleDataTypesOnly is set then properties and fields which are reference 
+        /// types will still be listed.  However, their members will not be displayed.</remarks>
+        protected virtual void DisplayEnumerableObjects(IEnumerable enumerableObjects,
+			int rootIndentLevel, bool simpleDataTypesOnly,
+            Dictionary<Type, List<object>> referenceTypeObjectRegister,
+            string title, params object[] titleArgs)
 		{
 			int indentLevel = rootIndentLevel;
 
@@ -217,14 +263,16 @@ namespace DisplayHelper
 			foreach (object obj in enumerableObjects)
 			{
 				string itemTitle = string.Format("{0}[{1}]:", obj.GetType().Name, i);
-				if (obj.GetType().IsValueType || obj is string)
+				if (!this.ObjectIsReferenceType(obj))
 				{
 					this.DisplayHeadedText(indentLevel, itemTitle + " " + obj.ToString(),
 						false, true);
 				}
 				else
 				{
-					this.DisplaySingleObject(obj, indentLevel, "{0}[{1}]:", obj.GetType().Name, i);
+					this.DisplaySingleObject(obj, indentLevel, simpleDataTypesOnly,
+                        referenceTypeObjectRegister, 
+                        "{0}[{1}]:", obj.GetType().Name, i);
 				}
 				i++;
 			}
@@ -234,10 +282,14 @@ namespace DisplayHelper
 		/// Displays the details of a single object.
 		/// </summary>
 		protected virtual void DisplaySingleObject(object obj, int rootIndentLevel,
-			string title, params object[] titleArgs)
+            bool simpleDataTypesOnly,
+            Dictionary<Type, List<object>> referenceTypeObjectRegister, 
+            string title, params object[] titleArgs)
 		{
-			DisplayHelper.ObjectArguments objectArguments =
-				new DisplayHelper.ObjectArguments(obj, rootIndentLevel, title, titleArgs);
+            DisplayHelper.ObjectArguments objectArguments =
+				new DisplayHelper.ObjectArguments(obj, rootIndentLevel, null,
+                new Dictionary<Type, int>(), simpleDataTypesOnly,
+                referenceTypeObjectRegister, title, titleArgs);
 			this.DisplaySingleObject(objectArguments);
         }
 
@@ -444,20 +496,23 @@ namespace DisplayHelper
 		{
 			object obj = objectArgs.Object;
 			int rootIndentLevel = objectArgs.RootIndentLevel;
-			string title = objectArgs.Title;
 			string objectName = objectArgs.ObjectName;
 			Dictionary<Type, int> recursionTypeCount = objectArgs.RecursionTypeCount;
-			object[] titleArgs = objectArgs.TitleArgs;
+            Dictionary<Type, List<object>> referenceTypeObjectRegister = 
+                objectArgs.ReferenceTypeObjectRegister;
+            bool simpleDataTypesOnly = objectArgs.SimpleDataTypesOnly;
+            string title = objectArgs.Title;
+            object[] titleArgs = objectArgs.TitleArgs;
 
 			int indentLevel = rootIndentLevel;
 
 			bool objectIsNull = (obj == null);
-
+            
 			if (title != null && title.Trim().Length > 0)
 			{
-				// Do not write newline if object is null - will append to line.
-				bool includeNewLine = !objectIsNull;
-				this.DisplayHeadedText(indentLevel, title, false, includeNewLine,
+                // Do not write newline if object is null - will append to line.
+                bool includeNewLine = !objectIsNull;
+                this.DisplayHeadedText(indentLevel, title, false, includeNewLine,
 					titleArgs);
 				indentLevel++;
 			}
@@ -466,9 +521,17 @@ namespace DisplayHelper
 			{
 				// Only add leading space if a title was written.
 				bool addLeadingSpace = (indentLevel > rootIndentLevel);
-				this.DisplayAppendedText(_nullDisplayText, addLeadingSpace, true);
+                this.DisplayAppendedText(_nullDisplayText, addLeadingSpace, true);
 				return;
 			}
+
+            if (this.ObjectIsReferenceType(obj))
+            {
+                if (!this.ObjectHasPreviouslyBeenDisplayed(referenceTypeObjectRegister, obj))
+                {
+                    this.AddObjectToRegister(referenceTypeObjectRegister, obj);
+                }
+            }
 
 			List<MemberDetails> memberDetails = new List<MemberDetails>();
 			PropertyInfo[] properties = obj.GetType().GetProperties();
@@ -496,7 +559,8 @@ namespace DisplayHelper
 			for (int i = 0; i < memberDetails.Count; i++)
 			{
 				MemberDetails member = memberDetails[i];
-				DisplayObjectMember(member, obj, indentLevel);
+				DisplayObjectMember(member, obj, indentLevel, simpleDataTypesOnly,
+                    referenceTypeObjectRegister);
 			}
 		}
 
@@ -505,7 +569,8 @@ namespace DisplayHelper
 		/// </summary>
 		/// <remarks>Helper method for DisplaySingleObject.</remarks>
 		private void DisplayObjectMember(MemberDetails memberDetails, object parentObj,
-			int rootIndentLevel)
+			int rootIndentLevel, bool simpleDataTypesOnly,
+            Dictionary<Type, List<object>> referenceTypeObjectRegister)
 		{
 			int indentLevel = rootIndentLevel;
 
@@ -515,7 +580,8 @@ namespace DisplayHelper
 			bool memberValueIsNull = (memberValue == null);
 			bool memberIsEnumerable = !(memberValue is string) && memberValue is IEnumerable;
 			bool memberIsEmptyEnumerable = false;
-			if (!memberValueIsNull && memberIsEnumerable)
+            bool memberIsReferenceType = this.TypeIsReferenceType(memberType);
+            if (!memberValueIsNull && memberIsEnumerable)
 			{
 				memberIsEmptyEnumerable = true;
 				IEnumerable enumerable = memberValue as IEnumerable;
@@ -540,16 +606,52 @@ namespace DisplayHelper
 			string displayMemberType =
 				(memberDetails.MemberType == MemberTypes.Field) ? " (field)" : string.Empty;
 
-			if (memberType.IsValueType || memberType == typeof(string))
+            // Value tyeps and strings - just write value then stop because the member can't be 
+            //  an object with its own members.
+			if (!memberIsReferenceType)
 			{
 				this.DisplayHeadedText(indentLevel, "{0}{1}: {2}", false, true,
 					memberName, displayMemberType, displayValue);
 				return;
 			}
+            
+            bool memberObjectAlreadyDisplayed = false;
 
-			// Do not write newline if member value is null, member is an empty collection or 
-			//	maximum recursion depth has been reached - will append to line.
-			bool includeNewLine = (!memberValueIsNull && !memberIsEmptyEnumerable && !maxRecursionDepthReached);
+            object previousReferenceToObject = null;
+
+            List<object> previouslyDisplayedObjectsOfSameType = null;
+            if (referenceTypeObjectRegister.TryGetValue(memberType,
+                out previouslyDisplayedObjectsOfSameType))
+            {
+                previousReferenceToObject =
+                    previouslyDisplayedObjectsOfSameType.Find(item => (item == memberValue));
+            }
+            else
+            {
+                previouslyDisplayedObjectsOfSameType = new List<object>();
+                referenceTypeObjectRegister.Add(memberType, previouslyDisplayedObjectsOfSameType);
+            }
+
+            if (previousReferenceToObject != null)
+            {
+                memberObjectAlreadyDisplayed = true;
+            }
+            else
+            {
+                previouslyDisplayedObjectsOfSameType.Add(memberValue);
+            }
+
+            // Do not write newline in the following cicumstances (will want to add further text 
+            //  to the same line): 
+            //      Member value is null; or
+            //      Member is an empty collection; or 
+            //      We don't want to display the details of complex members; or
+            //      Member object has already been displayed because of circular references; or
+            //      Maximum recursion depth has been reached.
+            bool includeNewLine = (!memberValueIsNull && !memberIsEmptyEnumerable 
+                                && !simpleDataTypesOnly && !memberObjectAlreadyDisplayed 
+                                && !maxRecursionDepthReached);
+
 			string displayFormat;
 			if (displayMemberType.ToLower().Contains("field"))
 			{
@@ -559,35 +661,51 @@ namespace DisplayHelper
 			{
 				displayFormat = "{0} (type: {1}):";
 			}
+
 			this.DisplayHeadedText(indentLevel, displayFormat, false, includeNewLine,
 				memberName, memberType.FullName);
+
 			indentLevel++;
 
-			if (maxRecursionDepthReached)
-			{
-				this.DisplayAppendedText(_maxRecursionDepthText, true, true);
-				return;
-			}
+            if (memberValueIsNull)
+            {
+                this.DisplayAppendedText(_nullDisplayText, true, true);
+                return;
+            }
 
-			if (memberValueIsNull)
-			{
-				this.DisplayAppendedText(_nullDisplayText, true, true);
-				return;
-			}
+            if (memberIsEmptyEnumerable)
+            {
+                this.DisplayAppendedText(_emptyEnumerableDisplayText, true, true);
+                return;
+            }
 
-			if (memberIsEmptyEnumerable)
-			{
-				this.DisplayAppendedText(_emptyEnumerableDisplayText, true, true);
-				return;
-			}
+            // We would have exited above if the member was a value type or string so the member 
+            //  must be a complex type.
+            if (simpleDataTypesOnly)
+            {
+                this.DisplayAppendedText(_simpleTypesOnlyText, true, true);
+                return;
+            }
 
-			if (memberIsEnumerable)
+            if (memberObjectAlreadyDisplayed)
+            {
+                this.DisplayAppendedText(_referenceObjectAlreadyDisplayedText, true, true);
+                return;
+            }
+
+            if (maxRecursionDepthReached)
+            {
+                this.DisplayAppendedText(_maxRecursionDepthText, true, true);
+                return;
+            }
+
+            if (memberIsEnumerable)
 			{
 				int i = 0;
 				IEnumerable enumerable = memberValue as IEnumerable;
 				foreach (object item in enumerable)
 				{
-					if (item.GetType().IsValueType || item is string)
+					if (!this.ObjectIsReferenceType(item))
 					{
 						this.DisplayHeadedText(indentLevel, "{0}[{1}]: {2}", false, true,
 							memberName, i, item.ToString());
@@ -598,8 +716,9 @@ namespace DisplayHelper
 							memberName, i, item.GetType().FullName);
 
 						ObjectArguments itemObjectArguments =
-							new ObjectArguments(item, indentLevel + 1, null);
-						DisplaySingleObject(itemObjectArguments);
+							new ObjectArguments(item, indentLevel + 1, referenceTypeObjectRegister, null);
+                        itemObjectArguments.SimpleDataTypesOnly = simpleDataTypesOnly;
+                        DisplaySingleObject(itemObjectArguments);
 					}
 					i++;
 				}
@@ -607,8 +726,9 @@ namespace DisplayHelper
 				return;
 			}
 
-			ObjectArguments objectArguments =
-				new ObjectArguments(memberValue, indentLevel, null, memberName, recursionTypeCount);
+            ObjectArguments objectArguments =
+				new ObjectArguments(memberValue, indentLevel, null, recursionTypeCount, 
+                simpleDataTypesOnly, referenceTypeObjectRegister, memberName);
 			DisplaySingleObject(objectArguments);
 		}
 
@@ -632,6 +752,92 @@ namespace DisplayHelper
 			}
 		}
 
-		#endregion
-	}
+        /// <summary>
+        /// Indicates whether the object is a reference type or not.
+        /// </summary>
+        /// <remarks>For the purpose of this DisplayHelper a string is treated as a value type.</remarks>
+        private bool ObjectIsReferenceType(object obj)
+        {
+            if (obj == null)
+            {
+                // Could be nullable type or string; can't say definitely it's a reference type.
+                return false; 
+            }
+
+            return TypeIsReferenceType(obj.GetType());
+        }
+
+        /// <summary>
+        /// Indicates whether the Type is a reference type or not.
+        /// </summary>
+        private bool TypeIsReferenceType(Type type)
+        {
+            if (type == null)
+            {
+                return false;
+            }
+
+            return (!type.IsValueType && (type != typeof(string)));
+        }
+
+        private bool ObjectHasPreviouslyBeenDisplayed(Dictionary<Type, List<object>> referenceTypeObjectRegister, 
+            object obj)
+        {
+            if (obj == null)
+            {
+                return false;
+            }
+            if (referenceTypeObjectRegister == null)
+            {
+                return false;
+            }
+
+            Type objectType = obj.GetType();
+            object previousReferenceToObject = null;
+            List<object> previouslyDisplayedObjectsOfSameType = null;
+
+            // Have any objects of the same type previously been displayed?
+            if (referenceTypeObjectRegister.TryGetValue(objectType,
+                out previouslyDisplayedObjectsOfSameType))
+            {
+                previousReferenceToObject =
+                    previouslyDisplayedObjectsOfSameType.Find(item => (item == obj));
+
+                return (previousReferenceToObject != null);
+            }
+
+            return false;
+        }
+
+        private void AddObjectToRegister(Dictionary<Type, List<object>> referenceTypeObjectRegister,
+            object obj)
+        {
+            if (obj == null)
+            {
+                return;
+            }
+            if (referenceTypeObjectRegister == null)
+            {
+                return;
+            }
+
+            Type objectType = obj.GetType();
+            List<object> previouslyDisplayedObjectsOfSameType = null;
+
+            // Have any objects of the same type previously been displayed?
+            if (referenceTypeObjectRegister.TryGetValue(objectType,
+                out previouslyDisplayedObjectsOfSameType))
+            {
+                previouslyDisplayedObjectsOfSameType.Add(obj);
+            }
+            else
+            {
+                List<object> objectsOfSameType = new List<object>();
+                objectsOfSameType.Add(obj);
+                referenceTypeObjectRegister.Add(objectType, objectsOfSameType);
+            }
+        }
+
+        #endregion
+    }
 }

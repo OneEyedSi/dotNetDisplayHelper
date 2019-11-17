@@ -17,7 +17,11 @@ The **MainMenu** class in the **DisplayHelperDemo** project demonstrates how to 
 ### Displaying Objects
 The DisplayHelper uses reflection to display the values of an object's properties and fields.  It will recurse down through the object graph, displaying the values of sub-properties (properties of objects that are properties of other objects), sub-sub-properties, etc.
 
-To prevent endless recursion the DisplayHelper tracks how deep the recursion gets.  It currently has a hard-coded maximum recursion depth of 5: If the same type of object appears on 5 different levels within the object graph the DisplayHelper will terminate its walk through the graph.  In that case a message will be displayed to inform the user the DisplayHelper is terminating without having viewed the whole object graph, and the reason for the early termination.
+The DisplayHelper has two mechanisms to prevent endless recursion: 
+
+1. It will not follow direct or indirect circular references (for example, if a parent object has a Child property that has a Parent property pointing back to the original parent object).  Instead it displays a message it has encountered a circular reference and skip the property involved, continuing to display details of other properties;
+
+2. It tracks how deep the recursion gets.  It currently has a hard-coded maximum recursion depth of 5: If the same type of object appears on 5 different levels within the object graph the DisplayHelper will terminate its walk through the graph.  In that case a message will be displayed to inform the user the DisplayHelper is terminating without having viewed the whole object graph, and the reason for the early termination.
 
 In addition to recursing down through an object's properties, the DisplayHelper can display the properties of lists or arrays of objects.
 

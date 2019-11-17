@@ -38,8 +38,24 @@ namespace DisplayHelper
 		public static void ShowObject(RichTextBox textBox, object obj, int rootIndentLevel,
 			string title, params object[] titleArgs)
 		{
-			RichTextBoxDisplayHelper viewer = new RichTextBoxDisplayHelper(textBox);
-			viewer.DisplayObject(obj, rootIndentLevel, title, titleArgs);
+            ShowObject(textBox, obj, rootIndentLevel, false, title, titleArgs);
+        }
+
+        /// <summary>
+        /// Displays the details of an object - either a single object or an enumeration of objects 
+        /// - in the specified rich text box.
+        /// </summary>
+        /// <param name="simpleDataTypesOnly">If set then only displays the values of 
+        /// properties or fields which are value types or strings.  If cleared then displays the 
+        /// details of all properties and fields of the object.
+        /// </param>
+        /// <remarks>If simpleDataTypesOnly is set then properties and fields which are reference 
+        /// types will still be listed.  However, their members will not be displayed.</remarks>
+        public static void ShowObject(RichTextBox textBox, object obj, int rootIndentLevel, 
+            bool simpleDataTypesOnly, string title, params object[] titleArgs)
+        {
+            RichTextBoxDisplayHelper viewer = new RichTextBoxDisplayHelper(textBox);
+            viewer.DisplayObject(obj, rootIndentLevel, simpleDataTypesOnly, title, titleArgs);
         }
 
         /// <summary>

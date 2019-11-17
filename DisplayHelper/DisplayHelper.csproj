@@ -48,7 +48,7 @@
     <Compile Include="TextBoxDisplayHelper.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="DisplayHelper.nuspec" />
+    <None Include="NuGet\DisplayHelper.nuspec" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
