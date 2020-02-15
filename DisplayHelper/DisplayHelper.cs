@@ -539,10 +539,20 @@ namespace DisplayHelper
 			{
                 if (!property.GetGetMethod().IsStatic)
                 {
-                    memberDetails.Add(new MemberDetails(property.Name, property.MemberType,
-                        property.PropertyType, property.GetValue(obj, null),
-                        new Dictionary<Type, int>(recursionTypeCount)));
-                }
+					object value = null;
+					try
+					{
+						value = property.GetValue(obj, null);
+					}
+					catch (Exception ex)
+					{
+						value = string.Format("[UNABLE TO READ VALUE] {0}: {1}", ex.GetType().Name, ex.Message);
+					}
+
+					memberDetails.Add(new MemberDetails(property.Name, property.MemberType,
+							property.PropertyType, value,
+							new Dictionary<Type, int>(recursionTypeCount)));
+				}
 			}
 
 			FieldInfo[] fields = obj.GetType().GetFields();
@@ -550,10 +560,20 @@ namespace DisplayHelper
 			{
                 if (!field.IsStatic)
 			    {
-			        memberDetails.Add(new MemberDetails(field.Name, field.MemberType,
-			            field.FieldType, field.GetValue(obj),
-			            new Dictionary<Type, int>(recursionTypeCount)));
-			    }
+					object value = null;
+					try
+					{
+						value = field.GetValue(obj);
+					}
+					catch (Exception ex)
+					{
+						value = string.Format("[UNABLE TO READ VALUE] {0}: {1}", ex.GetType().Name, ex.Message);
+					}
+
+					memberDetails.Add(new MemberDetails(field.Name, field.MemberType,
+						field.FieldType, value,
+						new Dictionary<Type, int>(recursionTypeCount)));
+				}
 			}
 
 			for (int i = 0; i < memberDetails.Count; i++)
