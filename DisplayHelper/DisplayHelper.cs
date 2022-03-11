@@ -81,6 +81,8 @@ namespace DisplayHelper
 		#region Data Members **********************************************************************
 
 		private const string _nullDisplayText = "[NULL]";
+		private const string _emptyStringDisplayText = "[EMPTY STRING]";
+		private const string _blankStringDisplayText = "[BLANK STRING]";
 		private const string _emptyEnumerableDisplayText = "[NO ITEMS]";
 		private const string _maxRecursionDepthText = "[MAX RECURSION DEPTH REACHED]";
         private const string _simpleTypesOnlyText = "[DISPLAY OF COMPLEX TYPES DISABLED]";
@@ -181,21 +183,59 @@ namespace DisplayHelper
 				wrapText, includeNewLine);
 		}
 
-        #endregion
+		/// <summary>
+		/// Converts a string into text suitable for display.  
+		/// </summary>
+		/// <returns>
+		/// "[NULL]" if the input string is null; 
+		/// "[EMPTY STRING]" if the input string is an empty string; 
+		/// "[BLANK STRING]" if the input string contains only white space; 
+		/// otherwise returns the input string unchanged.
+		/// </returns>
+		public static string GetDisplayText(string inputString)
+		{
+			if (inputString == null) return _nullDisplayText;
+			if (inputString.Length == 0) return _emptyStringDisplayText;
+			if (inputString.Trim().Length == 0) return _blankStringDisplayText;
+			
+			return inputString;
+		}
 
-        #region Protected Methods *****************************************************************
+		/// <summary>
+		/// Returns the exception type and message, recursively including inner exceptions.
+		/// </summary>
+		public static string GetExceptionDetails(Exception exception)
+		{
+			if (exception == null)
+			{
+				return "EXCEPTION IS NULL";
+			}
 
-        /// <summary>
-        /// Displays the details of an object - either a single object or an enumeration of 
-        /// objects.
-        /// </summary>
-        /// <param name="simpleDataTypesOnly">If set then only displays the values of 
-        /// properties or fields which are value types or strings.  If cleared then displays the 
-        /// details of all properties and fields of the object.
-        /// </param>
-        /// <remarks>If simpleDataTypesOnly is set then properties and fields which are reference 
-        /// types will still be listed.  However, their members will not be displayed.</remarks>
-        protected virtual void DisplayObject(object obj, int rootIndentLevel,
+			string message = $"{exception.GetType().Name}: {exception.Message}.";
+
+			if (exception.InnerException != null)
+			{
+				message += "  [Inner Exception - " + GetExceptionDetails(exception.InnerException) + "]";
+			}
+
+			return message;
+		}
+
+		#endregion
+
+		#region Protected Methods *****************************************************************
+
+		/// <summary>
+		/// Displays the details of an object - either a single object or an enumeration of 
+		/// objects.
+		/// </summary>
+		/// <param name="simpleDataTypesOnly">If set then only displays the values of 
+		/// properties or fields which are value types or strings.  If cleared then displays the 
+		/// details of all properties and fields of the object.
+		/// </param>
+		/// <remarks>If simpleDataTypesOnly is set then properties and fields which are reference 
+		/// types will still be listed.  However, their members will not be displayed.</remarks>
+		protected virtual void DisplayObject(object obj, int rootIndentLevel,
             bool simpleDataTypesOnly,
             string title, params object[] titleArgs)
 		{

@@ -1,10 +1,10 @@
 # DisplayHelper
 DisplayHelper is a small .NET library designed to simplify the display of objects and text.  Currently it can be used as-is with console applications and Windows Forms applications.  However, it is relatively straight-forward to extend the base DisplayHelper class for use in other applications.
 
-The DisplayHelper library targets **.NET 2.0** to make it as broadly usable as possible.
+The DisplayHelper library targets **.NET Framework 2.0** to make it as broadly usable as possible.
 
 ## Getting Started
-The repository contains a Visual Studio 2013 solution.  The solution contains two projects:
+The repository contains a Visual Studio 2017 solution.  The solution contains two projects:
 
 1. **DisplayHelper**: The DisplayHelper library.  This is made up of a base DisplayHelper class plus derived classes for displaying text in Console applications, in Windows Forms TextBoxes, and in Windows Forms RichTextBoxes.
 
@@ -19,7 +19,7 @@ The DisplayHelper uses reflection to display the values of an object's propertie
 
 The DisplayHelper has two mechanisms to prevent endless recursion: 
 
-1. It will not follow direct or indirect circular references (for example, if a parent object has a Child property that has a Parent property pointing back to the original parent object).  Instead it displays a message it has encountered a circular reference and skip the property involved, continuing to display details of other properties;
+1. It will not follow direct or indirect circular references (for example, if a parent object has a Child property that has a Parent property pointing back to the original parent object).  Instead it displays a message it has encountered a circular reference and skips the property involved, continuing to display details of other properties;
 
 2. It tracks how deep the recursion gets.  It currently has a hard-coded maximum recursion depth of 5: If the same type of object appears on 5 different levels within the object graph the DisplayHelper will terminate its walk through the graph.  In that case a message will be displayed to inform the user the DisplayHelper is terminating without having viewed the whole object graph, and the reason for the early termination.
 
@@ -48,6 +48,12 @@ The DisplayHelper has several helper methods for displaying text.  These are mos
 * Display numbered text, of the form: `2) My text.`  The indent level of the text can be specified;
 
 * Display titles and sub-titles, where the text is underlined.  The only difference between a title and sub-title is the style of the underline.
+
+### Get Display-friendly Text
+The DisplayHelper includes a helper method for converting text to a display-friendly format.  Specifically, if the string is null, empty or blank it will be converted to a user-friendly string, such as "[NULL]", "[EMPTY STRING]" or "[BLANK STRING]".
+
+### Get Exception Details
+In addition to displaying exception details the DisplayHelper includes a helper method that returns exception details as a string.  This may be useful for logging.  Similar to displaying the exception details, the string returned from the helper method includes the type of the exception and the exception message.  It also recursively includes the details of any inner exceptions and inner-inner exceptions, etc.
 
 ## NuGet Package
 If required, [install NuGet](http://docs.nuget.org/docs/start-here/installing-nuget) for Visual Studio. Then, in Visual Studio, open the solution to add the package to and use the Package Manager Console to install [DisplayHelper](https://www.nuget.org/packages/DisplayHelper/):
